@@ -1,0 +1,164 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Dotbrand - My Final Year Project",
+      "version": "1.1.0",
+      "description": "Engineering Your E-Pharmacy Revolution"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8081/api/v1"
+      }
+    ],
+    "paths": {
+      "/auth/register": {
+        "post": {
+          "summary": "Register a new user",
+          "tags": ["Auth"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "email": { "type": "string" },
+                    "password": { "type": "string" }
+                  },
+                  "required": ["name", "email", "password"]
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "responses": {
+            "201": { "description": "User registered successfully" },
+            "400": { "description": "User already exists or invalid data" },
+            "500": { "description": "Server error" }
+          }
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "summary": "Login a user",
+          "tags": ["Auth"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": { "type": "string" },
+                    "password": { "type": "string" },
+                    "role": { "type": "string" }
+                  },
+                  "required": ["email", "password", "role"]
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": { "description": "User logged in successfully" },
+            "401": { "description": "Incorrect Password" },
+            "403": { "description": "Unauthorized Role" },
+            "404": { "description": "User doesn't exist" },
+            "500": { "description": "Server error" }
+          }
+        }
+      },
+      "/auth/users": {
+        "get": {
+          "summary": "Get all users from the database",
+          "tags": ["Users"],
+          "responses": {
+            "200": { "description": "Successfully fetched all users." },
+            "404": { "description": "No users found." },
+            "500": { "description": "Server error" }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/auth/forgot-password": {
+        "post": {
+          "summary": "Forgot password",
+          "tags": ["Auth"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": { "type": "string" }
+                  },
+                  "required": ["email"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Password reset link sent" },
+            "404": { "description": "Email not found" },
+            "500": { "description": "Something went wrong" }
+          }
+        }
+      },
+      "/auth/reset-password": {
+        "post": {
+          "summary": "Reset password",
+          "tags": ["Auth"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" },
+                    "password": { "type": "string" }
+                  },
+                  "required": ["token", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Password successfully reset" },
+            "404": { "description": "Email not found" },
+            "500": { "description": "Invalid or expired token" }
+          }
+        }
+      }
+    },
+  
+    "components": {
+      "securitySchemes": {
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    },
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ]
+  }
+  
